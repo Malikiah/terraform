@@ -1,0 +1,80 @@
+# - name: Security Playbook
+#   become: yes
+#   import_playbook: security_playbook.yaml
+
+# - name: NFS Playbook
+#   become: yes
+#   import_playbook: nfs_playbook.yaml
+
+- name: Localhost Configuration
+  hosts: 127.0.0.1
+  gather_facts: false
+  become: false
+  tasks:
+  - name: Curling Helm Git repo && Installing Helm
+    get_url:
+      url: https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
+      dest: .
+
+  - name: Installing helm 
+    shell: mv get-helm-3 get_helm.sh && source ./get_helm.sh
+  
+  - name: Removing helm install artifacts
+    shell: rm get_helm.sh
+
+
+  - name: Creating nginx-ingress namespace
+    shell: kubectl create namespace nginx-ingress
+    ignore_errors: yes
+
+  - name: Installing Nginx helm chart
+    shell: helm install nginx-ingress stable/nginx-ingress --namespace nginx-ingress
+    ignore_errors: yes
+
+
+  - name: Creating cert manager namespace
+    shell: kubectl create namespace cert-manager
+    ignore_errors: yes
+
+  - name: Installing Cert Manager
+    shell: kubectl apply -f ansible/kubernetes_files/cert-manager/cert-manager.yaml
+    ignore_errors: yes
+
+  - name: Applying certification issuer
+    shell: kubectl apply -f kubernetes_files/cert-manager/staging-issuer.yaml
+
+  - name: Creating nfs-client namespace
+    shell: kubectl create namespace nfs-client
+    ignore_errors: yes
+
+  - name: Installing NFS Client Provisioner
+    shell: helm install nfs-client-provisioner stable/nfs-client-provisioner --set nfs.server=nfs.artace.io --set nfs.path=/data/nfs4
+    ignore_errors: yes
+
+  - name: Creating nextcloud nextcloud
+    shell: kubectl create namespace nextcloud
+    ignore_errors: yes
+
+  - name: Installing Nextcloud
+    shell: helm install nextcloud stable/nextcloud --namespace nextcloud --set nextcloud.host=cloud.malikiah.io,nextcloud.username=malikiah,nextcloud.password=password,mariadb.enabled=true,mariadb.rootUser.password=$nextcloud_mariadb_root_password,mariadb.db.name=nextcloud,mariadb.db.user=nextcloud,mariadb.db.password=$nextcloud_mariadb_passwordingress.enabled=true,nginx.enabled=true,image.tag=fpm,persistence.enabled=true,persistence.storageClass=do=block-storage,persistence.existingClaim=nextcloud-pvc,ingress.servicePort=https
+    ignore_errors: yes
+
+  - name: Applying nextcloud ingress
+    shell: kubectl apply -f kubernetes_files/nextcloud/ingress.yaml
+  
+
+
+  # - name: Applying NFS service account
+  #   shell: kubectl apply -f kubernetes_files/nfs/service-account.yaml 
+
+  # - name: Applying NFS cluster role && cluster role binding
+  #   shell: kubectl apply -f kubernetes_files/nfs/cluster-role.yaml ; kubectl apply -f kubernetes_files/nfs/cluster-role-binding.yaml
+
+  # - name: Applying NFS service account
+  #   shell: kubectl apply -f kubernetes_files/nfs/storage-class.yaml
+
+  # - name: Applying Deployment
+  #   shell: kubectl apply -f kubernetes_files/nfs/deployment.yaml
+
+  # - name: Creating Persistent Volume Claim for Nextcloud
+  #   shell: kubectl apply -f kubernetes_files/nextcloud/pvc.yaml

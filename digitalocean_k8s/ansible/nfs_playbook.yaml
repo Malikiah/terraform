@@ -1,0 +1,7 @@
+- name: NFS Playbook
+  hosts: nfs_nodes
+  connection: ssh
+  become: yes
+  gather_facts: true
+  roles:
+  - nfs-k8s

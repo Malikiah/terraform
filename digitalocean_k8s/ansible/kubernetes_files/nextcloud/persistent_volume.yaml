@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nextcloud-persistent-volume
+spec:
+  capacity:
+    storage: 10Gi # This size is used to match a volume to a tenents claim
+  accessModes:
+    - ReadWriteOnce # Access modes are defined below
+  persistentVolumeReclaimPolicy: Recycle # Reclaim policies are defined below 
+  nfs:
+    server: nfs.malikiah.io # Please change this to your NFS server
+    path: /data/nfs4/nextcloud # Please change this to the relevant share

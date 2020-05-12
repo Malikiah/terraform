@@ -61,3 +61,8 @@ variable "nextcloud_domain" {
   description = ""
   default = ""
 }
+
+variable "wordpress_domain" {
+  description = ""
+  default = ""
+}

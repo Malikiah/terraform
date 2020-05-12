@@ -12,6 +12,7 @@ data "template_file" "inventory" {
         nfs_domain = module.nfs.nfs_domain,
         nfs_path = module.nfs.nfs_path
         nextcloud_domain = var.nextcloud_domain
+        wordpress_domain = var.wordpress_domain
     }
 
     depends_on = [
@@ -27,19 +28,23 @@ resource "null_resource" "ansible_configuration" {
     }
 
     provisioner "local-exec" {
-        command = "mkdir ansible"
+        command = "rm -rf ansible"
     }
 
     provisioner "local-exec" {
-        command = "echo '${data.template_file.inventory.rendered}' > ansible/inventory.cfg"
+        command = "mkdir -p ansible"
     }
 
     provisioner "local-exec" {
-        command = "git clone https://github.com/Malikiah/playbooks.git ansible/playbooks"
+        command = "git clone https://github.com/Malikiah/playbooks.git ansible"
     }
     
     provisioner "local-exec" {
         command = "git clone https://github.com/Malikiah/roles.git ansible/roles"
+    }
+
+        provisioner "local-exec" {
+        command = "echo '${data.template_file.inventory.rendered}' > ansible/inventory.cfg"
     }
 
 }

@@ -20,5 +20,6 @@ admin_email = "root@localhost"
 
 // DNS Variables \\
 nextcloud_domain = "cloud.artace.io"
+wordpress_domain = "wordpress.artace.io"
 
 

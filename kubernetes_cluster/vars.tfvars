@@ -1,4 +1,5 @@
-deployment_state = "staging"
+// prod or staging \\
+deployment_state = "prod"
 
 // Master Variables \\
 master_count = 1
@@ -16,10 +17,11 @@ region = "sfo2"
 ssh_user = "root"
 ssh_key = "~/.ssh/id_rsa"
 
-admin_email = "root@localhost"
+admin_email = "damianmmccarthy@protonmail.com"
 
 // DNS Variables \\
+main_domain = "artace.io"
 nextcloud_domain = "cloud.artace.io"
-wordpress_domain = "wordpress.artace.io"
+wordpress_domain = "wiki.artace.io"
 
 

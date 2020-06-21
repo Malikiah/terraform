@@ -57,6 +57,12 @@ variable "admin_email" {
 
 // DNS Variables \\
 
+variable "main_domain" {
+  description = ""
+  default = ""
+}
+
+
 variable "nextcloud_domain" {
   description = ""
   default = ""

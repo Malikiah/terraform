@@ -4,6 +4,6 @@ locals {
 
     #node_ids = flatten(list([for droplet in module.nfs : droplet.id],[for droplet in digitalocean_droplet.worker: droplet.id]))
     
-    domains = list(var.nextcloud_domain, var.wordpress_domain)
+    domains = list(var.nextcloud_domain, var.wordpress_domain, var.main_domain)
 }
 

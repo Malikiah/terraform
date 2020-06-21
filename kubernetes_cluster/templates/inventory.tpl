@@ -7,6 +7,7 @@ admin_email = ${admin_email}
 nfs_domain = ${nfs_domain}
 nfs_path = ${nfs_path}
 nextcloud_domain = ${nextcloud_domain}
+wordpress_domain = ${wordpress_domain}
 
 
 [master_nodes]
